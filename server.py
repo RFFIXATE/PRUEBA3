@@ -55,4 +55,4 @@ def mostrar_estado():
 
 # Ejecutar la aplicación en el servidor local
 if __name__ == '__main__':
-    app.run(host='localhost', port=8080)
+    app.run(host='172.31.29.110', port=8080)

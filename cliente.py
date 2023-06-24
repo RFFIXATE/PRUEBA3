@@ -1,7 +1,7 @@
 import requests
 
 # URL base del servidor
-base_url = 'http://localhost:8080'
+base_url = '172.31.29.120:8080'
 
 def ingresar_id_jugador():
     jugador_id = input('Ingrese el ID del jugador: ')
