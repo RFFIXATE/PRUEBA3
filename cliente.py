@@ -1,3 +1,6 @@
+#sudo yum install -y git
+#sudo yum install -y python3-pip
+#pip3 install bottle, request
 import requests
 
 # URL base del servidor
@@ -37,7 +40,7 @@ def realizar_jugada(jugador_id, juego_id):
     print(response.text)
 
 def consultar_resultado_juego():
-    url = f'{base_url}/resultado'
+    url = f'{base_url}/resultado.tpl'
     response = requests.get(url)
     print(response.text)
 
