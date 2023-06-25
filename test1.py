@@ -3,13 +3,16 @@ import random
 import json
 import requests
 
+jugador_id = None
+juego_id = None
+
 def ingresar_id_jugador():
+    global jugador_id
     jugador_id = input("Ingrese el ID del jugador: ")
-    return jugador_id
 
 def ingresar_id_juego():
+    global juego_id
     juego_id = input("Ingrese el ID del juego: ")
-    return juego_id
 
 def consultar_juego_disponible():
     url = 'http://172.31.29.110:8080/backend/api/estado'
@@ -23,7 +26,7 @@ def consultar_juego_disponible():
     else:
         print("No se pudo obtener el estado del servidor.")
 
-def realizar_jugada(jugador_id, juego_id):
+def realizar_jugada():
     rango_inicial = 10
     rango_final = 100
 
@@ -48,8 +51,11 @@ def consultar_resultado_juego():
     url = 'http://172.31.29.110:8080/backend/api/resultado'
     response = requests.get(url)
     if response.status_code == 200:
-        resultado_juego = response.text
-        print(resultado_juego)
+        resultado_juego = response.json()
+        print("Nombre de los jugadores:", resultado_juego['jugadores'])
+        print("Valores de las jugadas:", resultado_juego['jugadas'])
+        print("Jugador Ganador:", resultado_juego['jugador_ganador'])
+        print("Puntaje acumulado de los jugadores:", resultado_juego['puntajes'])
     else:
         print("No se pudo obtener el resultado del juego.")
 
@@ -67,24 +73,18 @@ def mostrar_menu():
     print(menu)
 
 def main():
-    jugador_id = None
-    juego_id = None
-
     while True:
         mostrar_menu()
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            jugador_id = ingresar_id_jugador()
+            ingresar_id_jugador()
         elif opcion == "2":
-            juego_id = ingresar_id_juego()
+            ingresar_id_juego()
         elif opcion == "3":
             consultar_juego_disponible()
         elif opcion == "4":
-            if jugador_id and juego_id:
-                realizar_jugada(jugador_id, juego_id)
-            else:
-                print("Debe ingresar el ID del jugador y del juego antes de realizar una jugada.")
+            realizar_jugada()
         elif opcion == "5":
             consultar_resultado_juego()
         elif opcion == "6":
