@@ -5,54 +5,40 @@ from bottle import route, run, template
 from datetime import datetime
 import csv
 
+jugadores = []
+jugadas = []
+jugador_ganador = ""
+puntajes = {}
+
 @post('/backend/api/jugada')
 
 def recibir_jugada():
-    data = request.json
-    jugador_id = data.get('jugador_id')
-    juego_id = data.get('juego_id')
-    valor_jugada = data.get('valor_jugada')
+    jugador_id = request.forms.get('jugador_id')
+    juego_id = request.forms.get('juego_id')
+    valor_jugada = request.forms.get('valor_jugada')
 
-    # Hacer algo con los datos recibidos, por ejemplo, almacenarlos en un archivo CSV
+    jugadores.append(jugador_id)
+    jugadas.append(valor_jugada)
+
+    if jugador_id in puntajes:
+        puntajes[jugador_id] += 1
+    else:
+        puntajes[jugador_id] = 1
+
+    if puntajes[jugador_id] == 5:
+        jugador_ganador = jugador_id
+
+    # Guardar los datos en un archivo CSV
     with open('jugadas.csv', 'a', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow([jugador_id, juego_id, valor_jugada])
+        writer.writerow([jugador_id, juego_id, valor_jugada, len(jugadas), jugador_ganador])
 
-    return template('<b>Jugada recibida - Jugador ID: {{jugador_id}} - Juego ID: {{juego_id}} - Valor de la jugada: {{valor_jugada}}</b>!', jugador_id=jugador_id, juego_id=juego_id, valor_jugada=valor_jugada)
-
-run(host='172.31.29.110', port=8080)
+    return "Jugada recibida correctamente."
 
 @get('/backend/api/resultado')
 
 def obtener_resultado_juego():
-    # Hacer algo para obtener los datos del juego y los jugadores
-    # Por ejemplo, leer los datos desde el archivo CSV
-
-    jugadores = []
-    jugadas = []
-    jugador_ganador = None
-    puntajes = {}
-
-    with open('jugadas.csv', 'r') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            jugador_id, juego_id, valor_jugada = row[:3]
-            jugadores.append(jugador_id)
-            jugadas.append(valor_jugada)
-
-            # Calcular puntajes acumulados
-            if jugador_id in puntajes:
-                puntajes[jugador_id] += int(valor_jugada)
-            else:
-                puntajes[jugador_id] = int(valor_jugada)
-
-    # Obtener el jugador ganador
-    if puntajes:
-        jugador_ganador = max(puntajes, key=puntajes.get)
-
     return template('resultado_juego.tpl', jugadores=jugadores, jugadas=jugadas, jugador_ganador=jugador_ganador, puntajes=puntajes)
-
-run(host='172.31.29.110', port=8080)
 
 @get('/backend/api/estado')
 

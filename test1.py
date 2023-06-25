@@ -3,6 +3,10 @@ import random
 import json
 import requests
 
+import random
+import json
+import requests
+
 def ingresar_id_jugador():
     jugador_id = input("Ingrese el ID del jugador: ")
     return jugador_id
@@ -16,23 +20,19 @@ def consultar_juego_disponible():
     response = requests.get(url)
     if response.status_code == 200:
         estado_servidor = response.json()
+        estado = estado_servidor.get('estado')
         juego_en_curso = estado_servidor.get('juego_en_curso')
-        if juego_en_curso:
-            print(f"Hay un juego en curso. ID del juego: {juego_en_curso}")
-        else:
-            print("No hay juegos en curso.")
+        print(f"Estado del servidor: {estado}")
+        print(f"ID del juego en curso: {juego_en_curso}")
     else:
         print("No se pudo obtener el estado del servidor.")
 
-def realizar_jugada():
+def realizar_jugada(jugador_id, juego_id):
     rango_inicial = 10
     rango_final = 100
 
     numero = random.randint(rango_inicial, rango_final)
     print(f"Número de jugada generado: {numero}")
-
-    jugador_id = ingresar_id_jugador()
-    juego_id = ingresar_id_juego()
 
     jugada = {
         'jugador_id': jugador_id,
@@ -71,18 +71,24 @@ def mostrar_menu():
     print(menu)
 
 def main():
+    jugador_id = None
+    juego_id = None
+
     while True:
         mostrar_menu()
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            ingresar_id_jugador()
+            jugador_id = ingresar_id_jugador()
         elif opcion == "2":
-            ingresar_id_juego()
+            juego_id = ingresar_id_juego()
         elif opcion == "3":
             consultar_juego_disponible()
         elif opcion == "4":
-            realizar_jugada()
+            if jugador_id and juego_id:
+                realizar_jugada(jugador_id, juego_id)
+            else:
+                print("Debe ingresar el ID del jugador y del juego antes de realizar una jugada.")
         elif opcion == "5":
             consultar_resultado_juego()
         elif opcion == "6":
