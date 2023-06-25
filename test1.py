@@ -16,7 +16,7 @@ jugada = {
         }
 
 #//PASO 3
-url = 'http://172.31.29.120:8080/backend/api/jugada/1'
+url = 'http://172.31.29.110:8080/backend/api/jugada/1'
 
 enviar = requests.post(url, json=json.dumps(jugada))
 print('El servidor responde: ', enviar.text)
