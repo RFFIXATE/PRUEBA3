@@ -3,10 +3,6 @@ import random
 import json
 import requests
 
-import random
-import json
-import requests
-
 def ingresar_id_jugador():
     jugador_id = input("Ingrese el ID del jugador: ")
     return jugador_id
