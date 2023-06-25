@@ -3,33 +3,92 @@ import random
 import json
 import requests
 
-rango_inicial = 10
-rango_final = 100
+def ingresar_id_jugador():
+    jugador_id = input("Ingrese el ID del jugador: ")
+    return jugador_id
 
-# Generar el número aleatorio
-numero = random.randint(rango_inicial, rango_final)
-print(numero)
+def ingresar_id_juego():
+    juego_id = input("Ingrese el ID del juego: ")
+    return juego_id
 
-# Construir el diccionario con los datos de la jugada
-jugada = {
-    'jugador_id': '',
-    'juego_id': '',
-    'valor_jugada': numero
-}
+def consultar_juego_disponible():
+    url = 'http://172.31.29.110:8080/backend/api/estado'
+    response = requests.get(url)
+    if response.status_code == 200:
+        estado_servidor = response.json()
+        juego_en_curso = estado_servidor.get('juego_en_curso')
+        if juego_en_curso:
+            print(f"Hay un juego en curso. ID del juego: {juego_en_curso}")
+        else:
+            print("No hay juegos en curso.")
+    else:
+        print("No se pudo obtener el estado del servidor.")
 
-# Enviar la solicitud POST al servidor
-url = 'http://172.31.29.110:8080/backend/api/jugada/1'
-enviar = requests.post(url, json=jugada)
-print('El servidor responde:', enviar.text)
+def realizar_jugada():
+    rango_inicial = 10
+    rango_final = 100
 
-# Obtener los datos del servidor y asignarlos a las variables correspondientes
-respuesta = enviar.json()
-jugador_id = respuesta.get('jugador_id')
-juego_id = respuesta.get('juego_id')
+    numero = random.randint(rango_inicial, rango_final)
+    print(f"Número de jugada generado: {numero}")
 
-# Actualizar el diccionario de jugada con los valores recibidos del servidor
-jugada['jugador_id'] = jugador_id
-jugada['juego_id'] = juego_id
+    jugador_id = ingresar_id_jugador()
+    juego_id = ingresar_id_juego()
 
-# Imprimir la jugada con los valores asignados
-print('Jugada:', jugada)
+    jugada = {
+        'jugador_id': jugador_id,
+        'juego_id': juego_id,
+        'valor_jugada': numero
+    }
+
+    url = 'http://172.31.29.110:8080/backend/api/jugada'
+    response = requests.post(url, json=jugada)
+
+    if response.status_code == 200:
+        print("Jugada enviada correctamente.")
+    else:
+        print("Error al enviar la jugada.")
+
+def consultar_resultado_juego():
+    url = 'http://172.31.29.110:8080/backend/api/resultado'
+    response = requests.get(url)
+    if response.status_code == 200:
+        resultado_juego = response.text
+        print(resultado_juego)
+    else:
+        print("No se pudo obtener el resultado del juego.")
+
+def mostrar_menu():
+    menu = """
+    --- Menú ---
+    1. Ingresar ID del jugador
+    2. Ingresar ID del juego
+    3. Consultar juego disponible
+    4. Realizar jugada
+    5. Consultar resultado del juego
+    6. Salir
+    """
+
+    print(menu)
+
+def main():
+    while True:
+        mostrar_menu()
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            ingresar_id_jugador()
+        elif opcion == "2":
+            ingresar_id_juego()
+        elif opcion == "3":
+            consultar_juego_disponible()
+        elif opcion == "4":
+            realizar_jugada()
+        elif opcion == "5":
+            consultar_resultado_juego()
+        elif opcion == "6":
+            break
+        else:
+            print("Opción inválida. Por favor, seleccione una opción válida.")
+
+if __name__ == '__main__':
+    main()
