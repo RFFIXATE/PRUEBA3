@@ -10,10 +10,11 @@ def mostrar_menu():
     print("---- Menú ----")
     print("1. Ingresar ID del jugador")
     print("2. Ingresar ID del juego")
-    print("3. Consultar juego disponible y estado del servidor")
+    print("3. Consultar juego disponible")
     print("4. Realizar jugada")
     print("5. Consultar resultado del juego")
-    print("6. Salir")
+    print("6. Consultar estado del servidor")
+    print("7. Salir")
 
 def ingresar_id_jugador():
     jugador_id = input("Ingrese el ID del jugador: ")
@@ -23,12 +24,10 @@ def ingresar_id_juego():
     juego_id = input("Ingrese el ID del juego: ")
     return juego_id
 
-def consultar_juego_disponible_estado_servidor():
-    response = requests.get(f"{server_url}/juego_disponible_estado")
-    data = response.json()
-    print(f"Juego disponible: {data['juego_disponible']}")
-    print(f"Estado del servidor: {data['estado_servidor']}")
-    print(f"ID del juego en curso: {data['juego_id']}")
+def consultar_juego_disponible():
+    response = requests.get(f"{server_url}/juego_disponible")
+    juego_disponible = response.json()
+    print(f"Juego disponible: {juego_disponible['juego_disponible']}")
     input("Presiona cualquier tecla para volver al menú...")
 
 def realizar_jugada(jugador_id, juego_id):
@@ -55,6 +54,13 @@ def consultar_resultado_juego():
         print(f"{jugador}: {puntaje}")
     input("Presiona cualquier tecla para volver al menú...")
 
+def consultar_estado_servidor():
+    response = requests.get(f"{server_url}/estado")
+    estado_servidor = response.json()
+    print(f"Estado del servidor: {estado_servidor['estado_servidor']}")
+    print(f"ID del juego en curso: {estado_servidor['juego_id']}")
+    input("Presiona cualquier tecla para volver al menú...")
+
 def main():
     jugador_id = ""
     juego_id = ""
@@ -64,14 +70,12 @@ def main():
         opcion = input("Ingrese el número de opción: ")
         if opcion == '1':
             jugador_id = ingresar_id_jugador()
-            input("Presiona cualquier tecla para volver al menú...")
             os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '2':
             juego_id = ingresar_id_juego()
-            input("Presiona cualquier tecla para volver al menú...")
             os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '3':
-            consultar_juego_disponible_estado_servidor()
+            consultar_juego_disponible()
             os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '4':
             if not jugador_id or not juego_id:
@@ -84,6 +88,9 @@ def main():
             consultar_resultado_juego()
             os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '6':
+            consultar_estado_servidor()
+            os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
+        elif opcion == '7':
             print("¡Hasta luego!")
             break
         else:
