@@ -64,9 +64,11 @@ def main():
         opcion = input("Ingrese el número de opción: ")
         if opcion == '1':
             jugador_id = ingresar_id_jugador()
+            input("Presiona cualquier tecla para volver al menú...")
             os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '2':
             juego_id = ingresar_id_juego()
+            input("Presiona cualquier tecla para volver al menú...")
             os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '3':
             consultar_juego_disponible_estado_servidor()
