@@ -1,102 +1,68 @@
 #MAQUINA SERVIDOR LSO RHEL 8 192.168.24.128
 
-from bottle import get, post, request, route, run, template
-import random
+from bottle import get, post, request
+from bottle import route, run, template
+from datetime import datetime
 import csv
-import os
 
-jugadas_csv = 'jugadas.csv'
-estado_servidor = 'disponible'
-juego_en_curso = ''
+@post('/backend/api/jugada')
 
-@post('/backend/api/jugada/<id_juego>')
-def recibir_jugada(id_juego):
-    jugador_id = request.forms.get('jugador_id')
-    valor_jugada = request.forms.get('valor_jugada')
-    print(f"Jugador ID: {jugador_id}, Juego ID: {id_juego}, Valor de la jugada: {valor_jugada}")
-    guardar_jugada(jugador_id, id_juego, valor_jugada)
-    return template('<b>Jugada recibida. Jugador ID: {{jugador_id}}, Juego ID: {{id_juego}}, Valor de la jugada: {{valor_jugada}}</b>!', jugador_id=jugador_id, id_juego=id_juego, valor_jugada=valor_jugada)
+def recibir_jugada():
+    data = request.json
+    jugador_id = data.get('jugador_id')
+    juego_id = data.get('juego_id')
+    valor_jugada = data.get('valor_jugada')
+
+    # Hacer algo con los datos recibidos, por ejemplo, almacenarlos en un archivo CSV
+    with open('jugadas.csv', 'a', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow([jugador_id, juego_id, valor_jugada])
+
+    return template('<b>Jugada recibida - Jugador ID: {{jugador_id}} - Juego ID: {{juego_id}} - Valor de la jugada: {{valor_jugada}}</b>!', jugador_id=jugador_id, juego_id=juego_id, valor_jugada=valor_jugada)
+
+run(host='192.168.24.128', port=8080)
 
 @get('/backend/api/resultado')
-def consultar_resultado_juego():
+
+def obtener_resultado_juego():
+    # Hacer algo para obtener los datos del juego y los jugadores
+    # Por ejemplo, leer los datos desde el archivo CSV
+
     jugadores = []
-    valores_jugadas = []
+    jugadas = []
+    jugador_ganador = None
     puntajes = {}
-    jugador_ganador = ""
 
-    if not os.path.isfile(jugadas_csv):
-        return {
-            'jugadores': jugadores,
-            'valores_jugadas': valores_jugadas,
-            'jugador_ganador': jugador_ganador,
-            'puntajes': puntajes
-        }
-
-    with open(jugadas_csv, 'r') as file:
+    with open('jugadas.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if len(row) >= 3:
-                jugadores.append(row[0])
-                valores_jugadas.append(row[2])
-                if row[0] in puntajes:
-                    puntajes[row[0]] += int(row[2])
-                else:
-                    puntajes[row[0]] = int(row[2])
+            jugador_id, juego_id, valor_jugada = row[:3]
+            jugadores.append(jugador_id)
+            jugadas.append(valor_jugada)
 
+            # Calcular puntajes acumulados
+            if jugador_id in puntajes:
+                puntajes[jugador_id] += int(valor_jugada)
+            else:
+                puntajes[jugador_id] = int(valor_jugada)
+
+    # Obtener el jugador ganador
     if puntajes:
-        max_puntaje = max(puntajes.values())
-        jugadores_max = [jugador for jugador, puntaje in puntajes.items() if puntaje == max_puntaje]
-        jugador_ganador = ", ".join(jugadores_max)
+        jugador_ganador = max(puntajes, key=puntajes.get)
 
-    return {
-        'jugadores': jugadores,
-        'valores_jugadas': valores_jugadas,
-        'jugador_ganador': jugador_ganador,
-        'puntajes': puntajes
-    }
+    return template('resultado_juego.tpl', jugadores=jugadores, jugadas=jugadas, jugador_ganador=jugador_ganador, puntajes=puntajes)
+
+run(host='192.168.24.128', port=8080)
 
 @get('/backend/api/estado')
+
 def obtener_estado_servidor():
-    return {
-        'estado_servidor': estado_servidor,
-        'juego_id': juego_en_curso
-    }
+    estado = 'disponible'  # Estado del servidor: disponible
+    juego_en_curso = None  # ID del juego en curso (si hay alguno)
 
-def guardar_jugada(jugador_id, juego_id, valor_jugada):
-    numero_jugada = obtener_numero_jugada()
-    jugador_ganador = determinar_jugador_ganador(juego_id, valor_jugada)
-    datos_jugada = [jugador_id, juego_id, valor_jugada, numero_jugada, jugador_ganador]
-    with open(jugadas_csv, 'a', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(datos_jugada)
+    # Hacer algo para determinar el estado del servidor y el ID del juego en curso
+    # Por ejemplo, verificar si hay algún juego en curso en base a los datos del archivo CSV
 
-def obtener_numero_jugada():
-    if not os.path.isfile(jugadas_csv):
-        return 1
-
-    with open(jugadas_csv, 'r') as file:
-        reader = csv.reader(file)
-        numero_jugadas = len(list(reader))
-    return numero_jugadas + 1
-
-def determinar_jugador_ganador(juego_id, valor_jugada):
-    puntajes = {}
-    with open(jugadas_csv, 'r') as file:
-        reader = csv.reader(file)
-        for row in reader:
-            if len(row) >= 3 and row[1] == juego_id:
-                jugador_id = row[0]
-                valor_actual = int(row[2])
-                if jugador_id in puntajes:
-                    puntajes[jugador_id] += valor_actual
-                else:
-                    puntajes[jugador_id] = valor_actual
-    
-    if puntajes:
-        max_puntaje = max(puntajes.values())
-        jugadores_max = [jugador_id for jugador_id, puntaje in puntajes.items() if puntaje == max_puntaje]
-        return ", ".join(jugadores_max)
-    else:
-        return ""
+    return template('estado_servidor.tpl', estado=estado, juego_en_curso=juego_en_curso)
 
 run(host='192.168.24.128', port=8080)
