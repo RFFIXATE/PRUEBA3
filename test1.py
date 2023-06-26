@@ -1,6 +1,7 @@
 #MAQUINA CLIENTE CENTOS 8 172.31.29.110
 import random
 import requests
+import msvcrt
 
 def ingresar_jugador():
     jugador_id = input("Ingrese el ID del jugador: ")
@@ -17,10 +18,10 @@ def consultar_juego_disponible():
         data = response.json()
         estado_servidor = data.get('estado_servidor')
         juego_id = data.get('juego_id')
-        numero_jugada = data.get('numero_jugada')
+        numero_jugada_actual = data.get('numero_jugada_actual')
         print(f"Estado del servidor: {estado_servidor}")
         print(f"ID del juego disponible: {juego_id}")
-        print(f"Número de jugada actual: {numero_jugada}")
+        print(f"Número de jugada actual: {numero_jugada_actual}")
     else:
         print("Error al consultar el estado del servidor")
 
@@ -49,16 +50,22 @@ def consultar_resultado_juego():
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
-        jugadores = data.get('jugadores')
-        valores_jugadas = data.get('valores_jugadas')
-        jugador_ganador = data.get('jugador_ganador')
+        jugadas = data.get('jugadas')
         puntajes = data.get('puntajes')
 
         print("Resultado del juego:")
-        print("Jugadores:", jugadores)
-        print("Valores de las jugadas:", valores_jugadas)
-        print("Jugador Ganador:", jugador_ganador)
-        print("Puntaje acumulado de los jugadores:", puntajes)
+        for numero_jugada, datos_jugadas in jugadas.items():
+            print(f"Jugada #{numero_jugada}")
+            for dato in datos_jugadas:
+                jugador_id = dato['jugador_id']
+                valor_jugada = dato['valor_jugada']
+                jugador_ganador = dato['jugador_ganador']
+                print(f"Jugador: {jugador_id}, Valor de la jugada: {valor_jugada}, Ganador: {jugador_ganador}")
+            print("-------")
+        
+        print("Puntaje acumulado de los jugadores:")
+        for jugador_id, puntaje in puntajes.items():
+            print(f"Jugador: {jugador_id}, Puntaje: {puntaje}")
     else:
         print("Error al consultar el resultado del juego")
 
@@ -80,18 +87,24 @@ while True:
 
     if opcion == "1":
         jugador_id = ingresar_jugador()
+        msvcrt.getch()
     elif opcion == "2":
         juego_id = ingresar_juego()
+        msvcrt.getch()
     elif opcion == "3":
         consultar_juego_disponible()
+        msvcrt.getch()
     elif opcion == "4":
         if jugador_id and juego_id:
             realizar_jugada(jugador_id, juego_id)
         else:
             print("Ingrese el ID del jugador y del juego antes de realizar la jugada")
+        msvcrt.getch()
     elif opcion == "5":
         consultar_resultado_juego()
+        msvcrt.getch()
     elif opcion == "0":
         break
     else:
         print("Opción inválida. Intente nuevamente.")
+        msvcrt.getch()
