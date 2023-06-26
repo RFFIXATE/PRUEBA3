@@ -6,6 +6,8 @@ import random
 import csv
 
 jugadas_csv = 'jugadas.csv'
+estado_servidor = 'disponible'
+juego_en_curso = ''
 
 @post('/backend/api/jugada/<id_juego>')
 def recibir_jugada(id_juego):
@@ -14,6 +16,42 @@ def recibir_jugada(id_juego):
     print(f"Jugador ID: {jugador_id}, Juego ID: {id_juego}, Valor de la jugada: {valor_jugada}")
     guardar_jugada(jugador_id, id_juego, valor_jugada)
     return template('<b>Jugada recibida. Jugador ID: {{jugador_id}}, Juego ID: {{id_juego}}, Valor de la jugada: {{valor_jugada}}</b>!', jugador_id=jugador_id, id_juego=id_juego, valor_jugada=valor_jugada)
+
+@get('/backend/api/resultado')
+def consultar_resultado_juego():
+    jugadores = []
+    valores_jugadas = []
+    puntajes = {}
+    jugador_ganador = ""
+
+    with open(jugadas_csv, 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            jugadores.append(row[0])
+            valores_jugadas.append(row[2])
+            if row[0] in puntajes:
+                puntajes[row[0]] += int(row[2])
+            else:
+                puntajes[row[0]] = int(row[2])
+
+    if puntajes:
+        max_puntaje = max(puntajes.values())
+        jugadores_max = [jugador for jugador, puntaje in puntajes.items() if puntaje == max_puntaje]
+        jugador_ganador = ", ".join(jugadores_max)
+
+    return {
+        'jugadores': jugadores,
+        'valores_jugadas': valores_jugadas,
+        'jugador_ganador': jugador_ganador,
+        'puntajes': puntajes
+    }
+
+@get('/backend/api/estado')
+def obtener_estado_servidor():
+    return {
+        'estado_servidor': estado_servidor,
+        'juego_id': juego_en_curso
+    }
 
 def guardar_jugada(jugador_id, juego_id, valor_jugada):
     numero_jugada = obtener_numero_jugada()
