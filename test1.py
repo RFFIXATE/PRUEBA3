@@ -47,20 +47,16 @@ def consultar_resultado_juego():
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
-        jugadas = data.get('jugadas')
+        jugadores = data.get('jugadores')
+        valores_jugadas = data.get('valores_jugadas')
+        jugador_ganador = data.get('jugador_ganador')
         puntajes = data.get('puntajes')
 
         print("Resultado del juego:")
-        for jugada in jugadas:
-            jugador_id = jugada['jugador_id']
-            valor_jugada = jugada['valor_jugada']
-            jugador_ganador = jugada['jugador_ganador']
-            print(f"Jugador: {jugador_id}, Valor de la jugada: {valor_jugada}, Ganador: {jugador_ganador}")
-        print("-------")
-
-        print("Puntaje acumulado de los jugadores:")
-        for jugador_id, puntaje in puntajes.items():
-            print(f"Jugador: {jugador_id}, Puntaje: {puntaje}")
+        print("Jugadores:", jugadores)
+        print("Valores de las jugadas:", valores_jugadas)
+        print("Jugador Ganador:", jugador_ganador)
+        print("Puntaje acumulado de los jugadores:", puntajes)
     else:
         print("Error al consultar el resultado del juego")
 
@@ -82,24 +78,18 @@ while True:
 
     if opcion == "1":
         jugador_id = ingresar_jugador()
-        input("Presione Enter para continuar...")
     elif opcion == "2":
         juego_id = ingresar_juego()
-        input("Presione Enter para continuar...")
     elif opcion == "3":
         consultar_juego_disponible()
-        input("Presione Enter para continuar...")
     elif opcion == "4":
         if jugador_id and juego_id:
             realizar_jugada(jugador_id, juego_id)
         else:
             print("Ingrese el ID del jugador y del juego antes de realizar la jugada")
-        input("Presione Enter para continuar...")
     elif opcion == "5":
         consultar_resultado_juego()
-        input("Presione Enter para continuar...")
     elif opcion == "0":
         break
     else:
         print("Opción inválida. Intente nuevamente.")
-        input("Presione Enter para continuar...")
