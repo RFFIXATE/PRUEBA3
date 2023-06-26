@@ -50,7 +50,8 @@ def consultar_resultado_juego():
 def obtener_estado_servidor():
     return {
         'estado_servidor': estado_servidor,
-        'juego_id': juego_en_curso
+        'juego_id': juego_en_curso,
+        'numero_jugada': obtener_numero_jugada()
     }
 
 def guardar_jugada(jugador_id, juego_id, valor_jugada):

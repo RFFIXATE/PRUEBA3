@@ -17,8 +17,10 @@ def consultar_juego_disponible():
         data = response.json()
         estado_servidor = data.get('estado_servidor')
         juego_id = data.get('juego_id')
+        numero_jugada = data.get('numero_jugada')
         print(f"Estado del servidor: {estado_servidor}")
         print(f"ID del juego disponible: {juego_id}")
+        print(f"Número de jugada actual: {numero_jugada}")
     else:
         print("Error al consultar el estado del servidor")
 
@@ -32,7 +34,7 @@ def realizar_jugada(jugador_id, juego_id):
 
     datos_jugada = {
         'jugador_id': jugador_id,
-        'valor_jugada': str(numero)
+        'valor_jugada': numero
     }
 
     response = requests.post(url, data=datos_jugada)
@@ -78,10 +80,8 @@ while True:
 
     if opcion == "1":
         jugador_id = ingresar_jugador()
-        input("Presione una tecla para continuar...")
     elif opcion == "2":
         juego_id = ingresar_juego()
-        input("Presione una tecla para continuar...")
     elif opcion == "3":
         consultar_juego_disponible()
         input("Presione una tecla para continuar...")
@@ -91,7 +91,6 @@ while True:
             input("Presione una tecla para continuar...")
         else:
             print("Ingrese el ID del jugador y del juego antes de realizar la jugada")
-            input("Presione una tecla para continuar...")
     elif opcion == "5":
         consultar_resultado_juego()
         input("Presione una tecla para continuar...")
@@ -99,5 +98,4 @@ while True:
         break
     else:
         print("Opción inválida. Intente nuevamente.")
-        input("Presione una tecla para continuar...")
 
