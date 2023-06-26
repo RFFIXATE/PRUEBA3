@@ -84,18 +84,14 @@ while True:
         juego_id = ingresar_juego()
     elif opcion == "3":
         consultar_juego_disponible()
-        input("Presione una tecla para continuar...")
     elif opcion == "4":
         if jugador_id and juego_id:
             realizar_jugada(jugador_id, juego_id)
-            input("Presione una tecla para continuar...")
         else:
             print("Ingrese el ID del jugador y del juego antes de realizar la jugada")
     elif opcion == "5":
         consultar_resultado_juego()
-        input("Presione una tecla para continuar...")
     elif opcion == "0":
         break
     else:
         print("Opción inválida. Intente nuevamente.")
-

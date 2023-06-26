@@ -1,7 +1,6 @@
 #MAQUINA SERVIDOR LSO RHEL 8 192.168.24.128
 
-from bottle import get, post, request
-from bottle import route, run, template
+from bottle import get, post, request, route, run, template
 import random
 import csv
 
@@ -22,22 +21,25 @@ def consultar_resultado_juego():
     jugadores = []
     valores_jugadas = []
     puntajes = {}
-    jugador_ganador = ""
 
     with open(jugadas_csv, 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             jugadores.append(row[0])
-            valores_jugadas.append(row[2])
-            if row[0] in puntajes:
-                puntajes[row[0]] += int(row[2])
+            valores_jugadas.append(int(row[2]))
+            jugador_id = row[0]
+            valor_actual = int(row[2])
+            if jugador_id in puntajes:
+                puntajes[jugador_id] += valor_actual
             else:
-                puntajes[row[0]] = int(row[2])
+                puntajes[jugador_id] = valor_actual
 
     if puntajes:
         max_puntaje = max(puntajes.values())
         jugadores_max = [jugador for jugador, puntaje in puntajes.items() if puntaje == max_puntaje]
         jugador_ganador = ", ".join(jugadores_max)
+    else:
+        jugador_ganador = ""
 
     return {
         'jugadores': jugadores,
@@ -48,10 +50,14 @@ def consultar_resultado_juego():
 
 @get('/backend/api/estado')
 def obtener_estado_servidor():
+    with open(jugadas_csv, 'r') as file:
+        reader = csv.reader(file)
+        numero_jugadas = len(list(reader))
+
     return {
         'estado_servidor': estado_servidor,
         'juego_id': juego_en_curso,
-        'numero_jugada': obtener_numero_jugada()
+        'numero_jugada': numero_jugadas
     }
 
 def guardar_jugada(jugador_id, juego_id, valor_jugada):
@@ -89,4 +95,3 @@ def determinar_jugador_ganador(juego_id, valor_jugada):
         return ""
 
 run(host='192.168.24.128', port=8080)
-
