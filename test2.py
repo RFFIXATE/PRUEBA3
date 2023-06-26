@@ -1,9 +1,9 @@
 #MAQUINA SERVIDOR LSO RHEL 8 192.168.24.128
 
-from bottle import get, post, request
-from bottle import route, run, template
+from bottle import get, post, request, route, run, template
 import random
 import csv
+import os
 
 jugadas_csv = 'jugadas.csv'
 estado_servidor = 'disponible'
@@ -24,15 +24,24 @@ def consultar_resultado_juego():
     puntajes = {}
     jugador_ganador = ""
 
+    if not os.path.isfile(jugadas_csv):
+        return {
+            'jugadores': jugadores,
+            'valores_jugadas': valores_jugadas,
+            'jugador_ganador': jugador_ganador,
+            'puntajes': puntajes
+        }
+
     with open(jugadas_csv, 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            jugadores.append(row[0])
-            valores_jugadas.append(row[2])
-            if row[0] in puntajes:
-                puntajes[row[0]] += int(row[2])
-            else:
-                puntajes[row[0]] = int(row[2])
+            if len(row) >= 3:
+                jugadores.append(row[0])
+                valores_jugadas.append(row[2])
+                if row[0] in puntajes:
+                    puntajes[row[0]] += int(row[2])
+                else:
+                    puntajes[row[0]] = int(row[2])
 
     if puntajes:
         max_puntaje = max(puntajes.values())
@@ -62,6 +71,9 @@ def guardar_jugada(jugador_id, juego_id, valor_jugada):
         writer.writerow(datos_jugada)
 
 def obtener_numero_jugada():
+    if not os.path.isfile(jugadas_csv):
+        return 1
+
     with open(jugadas_csv, 'r') as file:
         reader = csv.reader(file)
         numero_jugadas = len(list(reader))
@@ -72,7 +84,7 @@ def determinar_jugador_ganador(juego_id, valor_jugada):
     with open(jugadas_csv, 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if row[1] == juego_id:
+            if len(row) >= 3 and row[1] == juego_id:
                 jugador_id = row[0]
                 valor_actual = int(row[2])
                 if jugador_id in puntajes:
