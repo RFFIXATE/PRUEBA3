@@ -38,9 +38,12 @@ def realizar_jugada(jugador_id, juego_id):
         'juego_id': juego_id,
         'valor_jugada': valor_jugada
     }
-    response = requests.post(f"{server_url}/jugada", json=jugada)
-    print("Jugada realizada:")
-    print(response.text)
+    try:
+        response = requests.post(f"{server_url}/jugada", json=jugada)
+        print("Jugada realizada:")
+        print(response.text)
+    except requests.exceptions.RequestException as e:
+        print(f"Error al realizar la jugada: {str(e)}")
     input("Presiona cualquier tecla para volver al menú...")
 
 def consultar_resultado_juego():
