@@ -1,4 +1,4 @@
-#MAQUINA SERVIDOR LSO RHEL 8 172.31.29.110
+#MAQUINA SERVIDOR LSO RHEL 8 192.168.24.128
 
 from bottle import post, get, run, template, request
 import random
@@ -65,4 +65,4 @@ def escribir_jugada_csv(jugador_id, juego_id, valor_jugada):
         writer = csv.writer(file)
         writer.writerow([jugador_id, juego_id, valor_jugada])
 
-run(host='172.31.29.110', port=8080)
+run(host='192.168.24.128', port=8080)

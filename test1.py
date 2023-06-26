@@ -15,7 +15,7 @@ def ingresar_id_juego():
     juego_id = input("Ingrese el ID del juego: ")
 
 def consultar_juego_disponible():
-    url = 'http://172.31.29.110:8080/backend/api/estado'
+    url = 'http://192.168.24.128:8080/backend/api/estado'
     response = requests.get(url)
     if response.status_code == 200:
         estado_servidor = response.json()
@@ -39,7 +39,7 @@ def realizar_jugada():
         'valor_jugada': numero
     }
 
-    url = 'http://172.31.29.110:8080/backend/api/jugada'
+    url = 'http://192.168.24.128:8080/backend/api/jugada'
     response = requests.post(url, json=jugada)
 
     if response.status_code == 200:
@@ -48,7 +48,7 @@ def realizar_jugada():
         print("Error al enviar la jugada.")
 
 def consultar_resultado_juego():
-    url = 'http://172.31.29.110:8080/backend/api/resultado'
+    url = 'http://192.168.24.128:8080/backend/api/resultado'
     response = requests.get(url)
     if response.status_code == 200:
         resultado_juego = response.json()
