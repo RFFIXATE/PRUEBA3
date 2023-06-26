@@ -60,27 +60,25 @@ def main():
     juego_id = ""
     
     while True:
+        os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         mostrar_menu()
         opcion = input("Ingrese el número de opción: ")
         if opcion == '1':
             jugador_id = ingresar_id_jugador()
-            os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
+            input("Presiona cualquier tecla para volver al menú...")
         elif opcion == '2':
             juego_id = ingresar_id_juego()
-            os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
+            input("Presiona cualquier tecla para volver al menú...")
         elif opcion == '3':
             consultar_juego_disponible_estado_servidor()
-            os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '4':
             if not jugador_id or not juego_id:
                 print("Debe ingresar el ID del jugador y el ID del juego primero.")
                 input("Presiona cualquier tecla para volver al menú...")
             else:
                 realizar_jugada(jugador_id, juego_id)
-                os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '5':
             consultar_resultado_juego()
-            os.system('clear')  # Limpiar la consola en sistemas Unix/Linux
         elif opcion == '6':
             print("¡Hasta luego!")
             break
