@@ -1,96 +1,95 @@
 #MAQUINA CLIENTE CENTOS 8 172.31.29.110
 import random
-import json
 import requests
 
-jugador_id = None
-juego_id = None
-
-def ingresar_id_jugador():
-    global jugador_id
+def ingresar_jugador():
     jugador_id = input("Ingrese el ID del jugador: ")
+    return jugador_id
 
-def ingresar_id_juego():
-    global juego_id
+def ingresar_juego():
     juego_id = input("Ingrese el ID del juego: ")
+    return juego_id
 
 def consultar_juego_disponible():
     url = 'http://192.168.24.128:8080/backend/api/estado'
     response = requests.get(url)
     if response.status_code == 200:
-        estado_servidor = response.json()
-        estado = estado_servidor.get('estado')
-        juego_en_curso = estado_servidor.get('juego_en_curso')
-        print(f"Estado del servidor: {estado}")
-        print(f"ID del juego en curso: {juego_en_curso}")
+        data = response.json()
+        estado_servidor = data.get('estado_servidor')
+        juego_id = data.get('juego_id')
+        print(f"Estado del servidor: {estado_servidor}")
+        print(f"ID del juego disponible: {juego_id}")
     else:
-        print("No se pudo obtener el estado del servidor.")
+        print("Error al consultar el estado del servidor")
 
-def realizar_jugada():
+def realizar_jugada(jugador_id, juego_id):
     rango_inicial = 10
     rango_final = 100
-
     numero = random.randint(rango_inicial, rango_final)
-    print(f"Número de jugada generado: {numero}")
+    print(f"Número generado: {numero}")
 
-    jugada = {
+    url = f'http://192.168.24.128:8080/backend/api/jugada/{juego_id}'
+
+    datos_jugada = {
         'jugador_id': jugador_id,
-        'juego_id': juego_id,
         'valor_jugada': numero
     }
 
-    url = 'http://192.168.24.128:8080/backend/api/jugada'
-    response = requests.post(url, json=jugada)
+    response = requests.post(url, data=datos_jugada)
 
     if response.status_code == 200:
-        print("Jugada enviada correctamente.")
+        print("Jugada enviada con éxito")
     else:
-        print("Error al enviar la jugada.")
+        print("Error al enviar la jugada")
 
 def consultar_resultado_juego():
     url = 'http://192.168.24.128:8080/backend/api/resultado'
     response = requests.get(url)
     if response.status_code == 200:
-        resultado_juego = response.json()
-        print("Nombre de los jugadores:", resultado_juego['jugadores'])
-        print("Valores de las jugadas:", resultado_juego['jugadas'])
-        print("Jugador Ganador:", resultado_juego['jugador_ganador'])
-        print("Puntaje acumulado de los jugadores:", resultado_juego['puntajes'])
+        data = response.json()
+        jugadores = data.get('jugadores')
+        valores_jugadas = data.get('valores_jugadas')
+        jugador_ganador = data.get('jugador_ganador')
+        puntajes = data.get('puntajes')
+
+        print("Resultado del juego:")
+        print("Jugadores:", jugadores)
+        print("Valores de las jugadas:", valores_jugadas)
+        print("Jugador Ganador:", jugador_ganador)
+        print("Puntaje acumulado de los jugadores:", puntajes)
     else:
-        print("No se pudo obtener el resultado del juego.")
+        print("Error al consultar el resultado del juego")
 
 def mostrar_menu():
-    menu = """
-    --- Menú ---
-    1. Ingresar ID del jugador
-    2. Ingresar ID del juego
-    3. Consultar juego disponible
-    4. Realizar jugada
-    5. Consultar resultado del juego
-    6. Salir
-    """
+    print("----- MENU -----")
+    print("1. Ingresar ID del jugador")
+    print("2. Ingresar ID del juego")
+    print("3. Consultar juego disponible")
+    print("4. Realizar jugada")
+    print("5. Consultar resultado del juego")
+    print("0. Salir")
 
-    print(menu)
+jugador_id = ""
+juego_id = ""
 
-def main():
-    while True:
-        mostrar_menu()
-        opcion = input("Seleccione una opción: ")
+while True:
+    mostrar_menu()
+    opcion = input("Seleccione una opción: ")
 
-        if opcion == "1":
-            ingresar_id_jugador()
-        elif opcion == "2":
-            ingresar_id_juego()
-        elif opcion == "3":
-            consultar_juego_disponible()
-        elif opcion == "4":
-            realizar_jugada()
-        elif opcion == "5":
-            consultar_resultado_juego()
-        elif opcion == "6":
-            break
+    if opcion == "1":
+        jugador_id = ingresar_jugador()
+    elif opcion == "2":
+        juego_id = ingresar_juego()
+    elif opcion == "3":
+        consultar_juego_disponible()
+    elif opcion == "4":
+        if jugador_id and juego_id:
+            realizar_jugada(jugador_id, juego_id)
         else:
-            print("Opción inválida. Por favor, seleccione una opción válida.")
-
-if __name__ == '__main__':
-    main()
+            print("Ingrese el ID del jugador y del juego antes de realizar la jugada")
+    elif opcion == "5":
+        consultar_resultado_juego()
+    elif opcion == "0":
+        break
+    else:
+        print("Opción inválida. Intente nuevamente.")
