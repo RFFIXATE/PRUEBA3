@@ -1,4 +1,6 @@
 #MAQUINA SERVIDOR LSO RHEL 8 192.168.24.128
+#pip3 install bottle
+#pip3 install csv
 
 from bottle import post, get, run, template, request
 import random
@@ -14,9 +16,10 @@ estado_servidor = {
     'juego_en_curso': None
 }
 
+#servidor responde a jugada
 @post('/backend/api/jugada')
 def recibir_jugada():
-    global jugador_ganador  # Agrega esta línea
+    global jugador_ganador  
 
     jugador_id = request.json.get('jugador_id')
     juego_id = request.json.get('juego_id')
@@ -38,7 +41,7 @@ def recibir_jugada():
     return template('<b>Jugada recibida correctamente. Jugador: {{jugador_id}}, Juego: {{juego_id}}, Valor: {{valor_jugada}}</b>', jugador_id=jugador_id, juego_id=juego_id, valor_jugada=valor_jugada)
 
 
-
+#Servidor obtiene resultado
 @get('/backend/api/resultado')
 
 def obtener_resultado_juego():
@@ -50,12 +53,13 @@ def obtener_resultado_juego():
     }
     return resultado
 
+#servidor obtiene el estado de si mismo
 @get('/backend/api/estado')
 def obtener_estado_servidor():
     estado_servidor['juego_en_curso'] = str(estado_servidor['juego_en_curso'])
     return estado_servidor
 
-
+#servidor realiza una solicitud de juego
 @post('/backend/api/juego')
 
 def iniciar_juego():

@@ -8,6 +8,7 @@ estado_servidor = {}
 jugador_id = None
 juego_id = None
 
+#funcion ingresar jugador
 def ingresar_id_jugador():
     global jugador_id
     jugador_id = input("Ingrese el ID del jugador: ")
@@ -15,6 +16,7 @@ def ingresar_id_jugador():
         print("ERROR: El ID del jugador no puede estar vacío.")
         ingresar_id_jugador()
 
+#funcion ingresar numero de juego
 def ingresar_id_juego():
     global juego_id, estado_servidor
     juego_id = input("Ingrese el ID del juego: ")
@@ -23,6 +25,7 @@ def ingresar_id_juego():
         print("ERROR: El ID del juego no puede estar vacío.")
         ingresar_id_juego()
 
+#funcion consultar juego
 def consultar_juego_disponible():
     global estado_servidor
     url = 'http://192.168.24.128:8080/backend/api/estado'
@@ -39,9 +42,7 @@ def consultar_juego_disponible():
     else:
         print("No se pudo obtener el estado del servidor.")
 
-
-
-
+#funcion realizar jugada
 def realizar_jugada():
     if not jugador_id:
         print("ERROR: No se ha ingresado el ID del jugador.")
@@ -70,6 +71,7 @@ def realizar_jugada():
     else:
         print("Error al enviar la jugada.")
 
+#funcion consultar resultado
 def consultar_resultado_juego():
     url = 'http://192.168.24.128:8080/backend/api/resultado'
     response = requests.get(url)
@@ -86,6 +88,7 @@ def consultar_resultado_juego():
     else:
         print("No se pudo obtener el resultado del juego.")
 
+#Aspecto visual MENU PRINCIPAL
 def mostrar_menu():
     menu = """
     --- Menú ---
@@ -99,6 +102,7 @@ def mostrar_menu():
 
     print(menu)
 
+#Funcionalidades del menu que implementan las otras funciones.
 def main():
     while True:
         mostrar_menu()
