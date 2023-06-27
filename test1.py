@@ -29,10 +29,14 @@ def consultar_juego_disponible():
         estado_servidor = response.json()
         estado = estado_servidor.get('estado')
         juego_en_curso = estado_servidor.get('juego_en_curso')
-        print(f"Estado del servidor: {estado}")
-        print(f"ID del juego en curso: {juego_en_curso}")
+        if juego_en_curso is not None:
+            print(f"Estado del servidor: {estado}")
+            print(f"ID del juego en curso: {juego_en_curso}")
+        else:
+            print("No hay juego en curso.")
     else:
         print("No se pudo obtener el estado del servidor.")
+
 
 def realizar_jugada():
     if not jugador_id:
