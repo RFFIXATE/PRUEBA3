@@ -4,6 +4,7 @@ from bottle import post, get, run, template, request
 import random
 import csv
 
+juego_id_generado = None
 jugadores = []
 jugadas = []
 jugador_ganador = ""
@@ -59,8 +60,8 @@ def obtener_estado_servidor():
 def iniciar_juego():
     estado_servidor['estado'] = 'ocupado'
     estado_servidor['juego_en_curso'] = random.randint(1, 100)
-
-    return "Juego iniciado."
+    estado_servidor['juego_en_curso'] = juego_id_generado
+    return f"Juego iniciado. ID del juego en curso: {juego_id_generado}"
 
 def escribir_jugada_csv(jugador_id, juego_id, valor_jugada):
     with open('jugadas.csv', 'a', newline='') as file:
