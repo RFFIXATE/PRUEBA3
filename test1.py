@@ -4,7 +4,7 @@ import json
 import requests
 import os
 
-
+estado_servidor = {}
 jugador_id = None
 juego_id = None
 
@@ -16,8 +16,9 @@ def ingresar_id_jugador():
         ingresar_id_jugador()
 
 def ingresar_id_juego():
-    global juego_id
+    global juego_id, estado_servidor
     juego_id = input("Ingrese el ID del juego: ")
+    estado_servidor['juego_en_curso'] = juego_id
     if not juego_id:
         print("ERROR: El ID del juego no puede estar vacío.")
         ingresar_id_juego()
