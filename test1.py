@@ -74,13 +74,15 @@ def consultar_resultado_juego():
     url = 'http://192.168.24.128:8080/backend/api/resultado'
     response = requests.get(url)
     if response.status_code == 200:
-        if resultado_juego['jugador_ganador'] != "None":
-            resultado_juego = response.json()
+        resultado_juego = response.json()
+        if 'jugador_ganador' in resultado_juego and resultado_juego['jugador_ganador'] != "None":
             print("Nombre de los jugadores:", resultado_juego['jugadores'])
             print("Valores de las jugadas:", resultado_juego['jugadas'])
             print(f"ID del juego: {juego_id}")
             print("Jugador Ganador:", resultado_juego['jugador_ganador'])
             print("Puntaje acumulado de los jugadores:", resultado_juego['puntajes'])
+        else:
+            print("Aun no hay jugador ganador")
     else:
         print("No se pudo obtener el resultado del juego.")
 
