@@ -51,9 +51,10 @@ def obtener_resultado_juego():
     return resultado
 
 @get('/backend/api/estado')
-
 def obtener_estado_servidor():
+    estado_servidor['juego_en_curso'] = str(estado_servidor['juego_en_curso'])
     return estado_servidor
+
 
 @post('/backend/api/juego')
 

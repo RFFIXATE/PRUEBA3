@@ -32,7 +32,7 @@ def consultar_juego_disponible():
         estado = estado_servidor.get('estado')
         juego_en_curso = estado_servidor.get('juego_en_curso')
         print(f"Estado del servidor: {estado}")
-        if juego_en_curso is not None:
+        if juego_en_curso != "None":
             print(f"ID del juego en curso: {juego_en_curso}")
             if juego_id is not None:
                 print(f"ID del juego ingresado: {juego_id}")
@@ -74,12 +74,13 @@ def consultar_resultado_juego():
     url = 'http://192.168.24.128:8080/backend/api/resultado'
     response = requests.get(url)
     if response.status_code == 200:
-        resultado_juego = response.json()
-        print("Nombre de los jugadores:", resultado_juego['jugadores'])
-        print("Valores de las jugadas:", resultado_juego['jugadas'])
-        print(f"ID del juego: {juego_id}")
-        print("Jugador Ganador:", resultado_juego['jugador_ganador'])
-        print("Puntaje acumulado de los jugadores:", resultado_juego['puntajes'])
+        if resultado_juego['jugador_ganador'] != "None":
+            resultado_juego = response.json()
+            print("Nombre de los jugadores:", resultado_juego['jugadores'])
+            print("Valores de las jugadas:", resultado_juego['jugadas'])
+            print(f"ID del juego: {juego_id}")
+            print("Jugador Ganador:", resultado_juego['jugador_ganador'])
+            print("Puntaje acumulado de los jugadores:", resultado_juego['puntajes'])
     else:
         print("No se pudo obtener el resultado del juego.")
 
