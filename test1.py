@@ -11,10 +11,16 @@ juego_id = None
 def ingresar_id_jugador():
     global jugador_id
     jugador_id = input("Ingrese el ID del jugador: ")
+    if not jugador_id:
+        print("ERROR: El ID del jugador no puede estar vacío.")
+        ingresar_id_jugador()
 
 def ingresar_id_juego():
     global juego_id
     juego_id = input("Ingrese el ID del juego: ")
+    if not juego_id:
+        print("ERROR: El ID del juego no puede estar vacío.")
+        ingresar_id_juego()
 
 def consultar_juego_disponible():
     url = 'http://192.168.24.128:8080/backend/api/estado'
