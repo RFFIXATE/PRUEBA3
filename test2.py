@@ -14,8 +14,9 @@ estado_servidor = {
 }
 
 @post('/backend/api/jugada')
-
 def recibir_jugada():
+    global jugador_ganador  # Agrega esta línea
+
     jugador_id = request.json.get('jugador_id')
     juego_id = request.json.get('juego_id')
     valor_jugada = request.json.get('valor_jugada')
@@ -34,6 +35,7 @@ def recibir_jugada():
     escribir_jugada_csv(jugador_id, juego_id, valor_jugada)
 
     return template('<b>Jugada recibida correctamente. Jugador: {{jugador_id}}, Juego: {{juego_id}}, Valor: {{valor_jugada}}</b>', jugador_id=jugador_id, juego_id=juego_id, valor_jugada=valor_jugada)
+
 
 
 @get('/backend/api/resultado')
