@@ -67,6 +67,14 @@ def consultar_resultado_juego():
     else:
         print("No se pudo obtener el resultado del juego.")
 
+def borrar_jugadas():
+    url = 'http://192.168.24.128:8080/backend/api/jugadas'
+    
+    response = requests.delete(url)
+    response.raise_for_status()
+    print("Jugadas borradas correctamente.")
+
+
 def mostrar_menu():
     menu = """
     --- Menú ---
@@ -75,7 +83,8 @@ def mostrar_menu():
     3. Consultar juego disponible
     4. Realizar jugada
     5. Consultar resultado del juego
-    6. Salir
+    6. Borrar jugadas
+    7. Salir
     """
 
     print(menu)
@@ -106,6 +115,9 @@ def main():
             input("Presione Enter para continuar...")
             os.system('clear' if os.name == 'posix' else 'cls')  # Limpia la pantalla
         elif opcion == "6":
+            borrar_jugadas()
+        elif opcion == '7':
+            input("usted selecciono salir... presione para confirmar")
             break
         else:
             print("Opción inválida. Por favor, seleccione una opción válida.")
