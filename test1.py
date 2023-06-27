@@ -35,6 +35,13 @@ def consultar_juego_disponible():
         print("No se pudo obtener el estado del servidor.")
 
 def realizar_jugada():
+    if not jugador_id:
+        print("ERROR: No se ha ingresado el ID del jugador.")
+        return
+    if not juego_id:
+        print("ERROR: No se ha ingresado el ID del juego.")
+        return
+    
     rango_inicial = 10
     rango_final = 100
 
