@@ -24,6 +24,7 @@ def ingresar_id_juego():
         ingresar_id_juego()
 
 def consultar_juego_disponible():
+    global estado_servidor
     url = 'http://192.168.24.128:8080/backend/api/estado'
     response = requests.get(url)
     if response.status_code == 200:
