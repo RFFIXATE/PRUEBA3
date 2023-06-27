@@ -2,6 +2,8 @@
 import random
 import json
 import requests
+import os
+
 
 jugador_id = None
 juego_id = None
@@ -79,18 +81,30 @@ def main():
 
         if opcion == "1":
             ingresar_id_jugador()
+            input("Presione Enter para continuar...")
+            os.system('clear' if os.name == 'posix' else 'cls')  # Limpia la pantalla
         elif opcion == "2":
             ingresar_id_juego()
+            input("Presione Enter para continuar...")
+            os.system('clear' if os.name == 'posix' else 'cls')  # Limpia la pantalla
         elif opcion == "3":
             consultar_juego_disponible()
+            input("Presione Enter para continuar...")
+            os.system('clear' if os.name == 'posix' else 'cls')  # Limpia la pantalla
         elif opcion == "4":
             realizar_jugada()
+            input("Presione Enter para continuar...")
+            os.system('clear' if os.name == 'posix' else 'cls')  # Limpia la pantalla
         elif opcion == "5":
             consultar_resultado_juego()
+            input("Presione Enter para continuar...")
+            os.system('clear' if os.name == 'posix' else 'cls')  # Limpia la pantalla
         elif opcion == "6":
             break
         else:
             print("Opción inválida. Por favor, seleccione una opción válida.")
+            input("Presione Enter para continuar...")
+            os.system('clear' if os.name == 'posix' else 'cls')  # Limpia la pantalla
 
 if __name__ == '__main__':
     main()

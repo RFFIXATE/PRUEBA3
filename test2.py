@@ -24,11 +24,11 @@ def recibir_jugada():
     jugadas.append(valor_jugada)
 
     if jugador_id in puntajes:
-        puntajes[jugador_id] += 1
+        puntajes[jugador_id] += valor_jugada
     else:
-        puntajes[jugador_id] = 1
+        puntajes[jugador_id] = valor_jugada
 
-    if puntajes[jugador_id] == 5:
+    if jugador_ganador == "" or puntajes[jugador_id] > puntajes[jugador_ganador]:
         jugador_ganador = jugador_id
 
     escribir_jugada_csv(jugador_id, juego_id, valor_jugada)
