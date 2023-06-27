@@ -33,6 +33,7 @@ def consultar_juego_disponible():
             print(f"Estado del servidor: {estado}")
             print(f"ID del juego en curso: {juego_en_curso}")
         else:
+            print(f"Estado del servidor: {estado}")
             print("No hay juego en curso.")
     else:
         print("No se pudo obtener el estado del servidor.")
