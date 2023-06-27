@@ -35,10 +35,10 @@ def consultar_juego_disponible():
         estado = estado_servidor.get('estado')
         juego_en_curso = estado_servidor.get('juego_en_curso')
         print(f"Estado del servidor: {estado}")
-        if juego_en_curso != "None":
+        if juego_en_curso is not None and juego_en_curso != "None":
             print(f"ID del juego en curso: {juego_en_curso}")
-            if juego_id is not None:
-                print(f"ID del juego ingresado: {juego_id}")
+        if juego_id is not None:
+            print(f"ID del juego ingresado: {juego_id}")
     else:
         print("No se pudo obtener el estado del servidor.")
 
